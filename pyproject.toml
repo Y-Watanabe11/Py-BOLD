@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "pybold"
+version = "0.1.0"
+description = "Neuro-symbolic COBOL-to-Python transpiler"
+requires-python = ">=3.11"
+dependencies = [
+    "networkx>=3.2",
+    "matplotlib>=3.8",
+    # Phase 2: agentic pipeline
+    "anthropic>=0.40.0",   # claude-opus-4-6 + adaptive thinking + streaming
+    "langgraph>=0.2.0",    # multi-agent state graph
+    "python-dotenv>=1.0",  # optional .env support for API keys
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
