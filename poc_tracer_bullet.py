@@ -196,12 +196,21 @@ def run_tracer_bullet():
         module_path = ROOT / "generated_module.py"
         tests_path  = ROOT / "test_generated.py"
 
+        # Safety: ensure generated file paths stay within the project root
+        if not module_path.resolve().is_relative_to(ROOT.resolve()):
+            raise RuntimeError(f"Refusing to write outside project root: {module_path}")
+        if not tests_path.resolve().is_relative_to(ROOT.resolve()):
+            raise RuntimeError(f"Refusing to write outside project root: {tests_path}")
+
         module_path.write_text(result["refactored_code"], encoding="utf-8")
         tests_path.write_text(result["test_code"],        encoding="utf-8")
 
         print(f"\n[BONUS] Written:")
         print(f"  {module_path}")
         print(f"  {tests_path}")
+
+        print(f"\n⚠  WARNING: About to execute LLM-generated code.")
+        print(f"   Review the files above before running in sensitive environments.")
         print(f"\n[BONUS] Running: pytest test_generated.py -v\n")
         print(sep)
 
@@ -209,6 +218,7 @@ def run_tracer_bullet():
         pytest_result = subprocess.run(
             [_sys.executable, "-m", "pytest", str(tests_path), "-v", "--tb=short"],
             cwd=ROOT,
+            timeout=120,
         )
 
         print(sep)
