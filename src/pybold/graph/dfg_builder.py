@@ -25,6 +25,7 @@ from ..parser.ast_nodes import (
     CobolProgram, DataItem, Paragraph,
     Statement, Expr, Condition,
     Literal, VarRef, BinOp, UnaryMinus,
+    Comparison, BoolOp,
     MoveStmt, ComputeStmt, AddStmt, SubtractStmt,
     MultiplyStmt, DivideStmt, IfStmt,
     PerformStmt, DisplayStmt, StopRunStmt,
@@ -172,9 +173,6 @@ def _vars_in_expr(expr: Expr) -> List[str]:
 
 
 def _vars_in_condition(cond: Condition) -> List[str]:
-    if isinstance(cond, type) and hasattr(cond, "left"):
-        pass
-    from ..parser.ast_nodes import Comparison, BoolOp
     if isinstance(cond, Comparison):
         return _vars_in_expr(cond.left) + _vars_in_expr(cond.right)
     if isinstance(cond, BoolOp):
